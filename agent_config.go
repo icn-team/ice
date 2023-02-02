@@ -4,6 +4,7 @@ import (
 	"net"
 	"time"
 
+	"bitbucket-eng-gpk1.cisco.com/bitbucket/scm/icn/iris/goiris/pkg/iris"
 	"github.com/pion/logging"
 	"github.com/pion/transport/vnet"
 	"golang.org/x/net/proxy"
@@ -170,6 +171,13 @@ type AgentConfig struct {
 
 	// Include loopback addresses in the candidate list.
 	IncludeLoopback bool
+
+	// IRIS parameters.
+	IRISEnable     bool
+	IRISServerIP   string
+	IRISServerPort uint16
+	IRISCallID     uint32
+	IRISClientID   uint32
 }
 
 // initWithDefaults populates an agent and falls back to defaults if fields are unset
@@ -233,6 +241,19 @@ func (config *AgentConfig) initWithDefaults(a *Agent) {
 	} else {
 		a.candidateTypes = config.CandidateTypes
 	}
+
+	a.irisEnabled = config.IRISEnable
+
+	if config.IRISEnable {
+		a.irisClient = iris.NewIrisClient()
+		a.irisClient.SetCallState(
+			uint(config.IRISCallID),
+			uint(config.IRISClientID),
+			config.IRISServerIP,
+			uint(config.IRISServerPort),
+		)
+	}
+
 }
 
 func (config *AgentConfig) initExtIPMapping(a *Agent) error {

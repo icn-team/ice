@@ -10,6 +10,7 @@ import (
 	"sync/atomic"
 	"time"
 
+	"bitbucket-eng-gpk1.cisco.com/bitbucket/scm/icn/iris/goiris/pkg/iris"
 	"github.com/pion/logging"
 	"github.com/pion/mdns"
 	"github.com/pion/stun"
@@ -135,6 +136,10 @@ type Agent struct {
 	insecureSkipVerify bool
 
 	proxyDialer proxy.Dialer
+
+	// IRIS transport
+	irisEnabled bool
+	irisClient  iris.IrisClient
 }
 
 type task struct {
@@ -1275,4 +1280,12 @@ func (a *Agent) setGatheringState(newState GatheringState) error {
 
 	<-done
 	return nil
+}
+
+func (a *Agent) IRISEnabled() bool {
+	return a.irisEnabled
+}
+
+func (a *Agent) IRISClient() iris.IrisClient {
+	return a.irisClient
 }

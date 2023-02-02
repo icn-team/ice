@@ -86,6 +86,13 @@ func (c *Conn) Write(p []byte) (int, error) {
 		return 0, errICEWriteSTUNMessage
 	}
 
+	if c.agent.IRISEnabled() {
+		irisClient := c.agent.IRISClient()
+		irisClient.ProduceAudioRtp(string(p), uint(len(p)))
+		atomic.AddUint64(&c.bytesSent, uint64(len(p)))
+		return len(p), nil
+	}
+
 	pair := c.agent.getSelectedPair()
 	if pair == nil {
 		if err = c.agent.run(c.agent.context(), func(ctx context.Context, a *Agent) {

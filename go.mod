@@ -3,6 +3,7 @@ module github.com/pion/ice/v2
 go 1.13
 
 require (
+	bitbucket-eng-gpk1.cisco.com/bitbucket/scm/icn/iris/goiris v1.0.0
 	github.com/google/uuid v1.3.0
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/pion/dtls/v2 v2.1.5
